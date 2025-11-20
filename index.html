@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8" />
+      <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>기술 공구 소개</title>
+      <!-- Google Fonts: Montserrat & Pacifico -->
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&family=Pacifico&display=swap" rel="stylesheet">
+      <style>
+        body {
+          background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+          min-height: 100vh;
+          margin: 0;
+          overflow-x: hidden;
+          position: relative;
+        }
+        .animated-bg {
+          position: fixed;
+          top: 0; left: 0; width: 100vw; height: 100vh;
+          z-index: -1;
+          pointer-events: none;
+        }
+        h1 {
+          font-family: 'Pacifico', cursive;
+          font-size: 3.5em;
+          color: #fff;
+          text-shadow: 0 4px 24px #2193b0, 0 1px 2px #fda085;
+          margin-bottom: 1.5rem;
+          letter-spacing: 2px;
+          animation: fadeInDown 1s cubic-bezier(.42,0,.58,1) both;
+        }
+        @keyframes fadeInDown {
+          0% { opacity: 0; transform: translateY(-40px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+      </style>
+  </head>
+  <body>
+    <canvas class="animated-bg"></canvas>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // 배경에 화려한 원 애니메이션 효과
+      const canvas = document.querySelector('.animated-bg');
+      const ctx = canvas.getContext('2d');
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      const circles = Array.from({length: 18}, (_,i) => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 40 + Math.random() * 60,
+        dx: (Math.random()-0.5)*0.8,
+        dy: (Math.random()-0.5)*0.8,
+        color: `rgba(${200+Math.random()*55},${120+Math.random()*80},${180+Math.random()*75},0.18)`
+      }));
+      function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(const c of circles) {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+          c.x += c.dx;
+          c.y += c.dy;
+          if(c.x<0||c.x>canvas.width) c.dx*=-1;
+          if(c.y<0||c.y>canvas.height) c.dy*=-1;
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    </script>
+  </body>
+</html>
